@@ -43,7 +43,6 @@ function createBoard() {
             square.firstChild.firstChild.classList.add("white");
         }
 
-
         gameBoard.append(square);
     });
 };
@@ -98,6 +97,7 @@ function dragdrop(e) {
             checkForWin();
             checkForCheck();
             changePlayer();
+            console.log('taken by opponent')
             return
         }
         if (taken && !takenByOpponent) {
@@ -108,10 +108,12 @@ function dragdrop(e) {
             return
         }
         if (valid) {
+            console.log('valid')
             e.target.append(draggedElement);
             checkForWin();
             checkForCheck();
             changePlayer();
+            console.log('valid')
             return
         }
     }
@@ -361,40 +363,43 @@ function revertIds() {
 }
 
 function checkForCheck() {
+    console.log('Checking for check')
     const kings = Array.from(document.querySelectorAll('#king'));
-    const allSquares = document.querySelectorAll('.square');
     const allPieces = Array.from(document.querySelectorAll('.piece'));
     let kingSquare = kings.find(king => king.firstChild.classList.contains(playerTurn)).parentElement;
     let kingId = kingSquare.getAttribute('square-id');
     let king = kingSquare.firstChild;
     let kingColor = king.classList.contains('white') ? 'white' : 'black';
+    //let kingMoves = getMoves(kingId, 'king', kingColor);
+    //let kingInCheck = false;
 
     allPieces.forEach(piece => {
-        if (piece.classList.contains(kingColor)) {
-            let pieceSquare = piece.parentElement;
-            let pieceId = pieceSquare.getAttribute('square-id');
-            let pieceType = piece.getAttribute('piece-type');
-            let pieceColor = piece.classList.contains('white') ? 'white' : 'black';
-
-            if (checkMove(pieceType, pieceId, kingId, pieceColor)) {
-                king.classList.add('check');
-                infoDisplay.innerHTML = `Check! ${kingColor} King is in check!`;
-            }
+        let pieceMoves = checkIfValid(piece);
+        if (pieceMoves.includes(kingId)) {
+            kingInCheck = true;
         }
     })
 }
 
 function checkForWin() {
+    console.log('Checking for win')
     const kings = Array.from(document.querySelectorAll('#king'));
+    console.log(kings)
+    const allPieces = Array.from(document.querySelectorAll('.piece'));
+    let kingSquare = kings.find(king => king.firstChild.classList.contains(playerTurn)).parentElement;
+    console.log(kingSquare)
+    let king = kingSquare.firstChild;
+    let kingColor = king.classList.contains('white') ? 'white' : 'black';
+    let kingMoves = checkIfValid(king);
 
-    if (!kings.some(king => king.firstChild.classList.contains('white'))) {
-        infoDisplay.innerHTML = "Black Player Wins!";
-        const allSquares = document.querySelectorAll('.square');
-        allSquares.forEach(square => square.firstChild?.setAttribute('draggable', false));
-    }
-    if (!kings.some(king => king.firstChild.classList.contains('black'))) {
-        infoDisplay.innerHTML = "White Player Wins!";
-        const allSquares = document.querySelectorAll('.square');
-        allSquares.forEach(square => square.firstChild?.setAttribute('draggable', false));
+    let kingInCheck = king.classList.contains('check');
+    let noMoves = kingMoves.length === 0;
+
+    if (kingInCheck && noMoves) {
+        infoDisplay.innerHTML = `Checkmate! ${kingColor} King is in checkmate!`;
+        gameOver = true;
+    } else if (!kingInCheck && noMoves) {
+        infoDisplay.innerHTML = `Stalemate! ${kingColor} King is in stalemate!`;
+        gameOver = true;
     }
 }
