@@ -50,7 +50,7 @@ p {
     background-color: rgb(235, 175, 34);
 }
 
-.square svg {
+.piece svg {
     width: 40px;
     height: 40px;
     position: relative;
