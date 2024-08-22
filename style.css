@@ -18,16 +18,18 @@ h1 {
     margin-bottom: 60px;
 }
 
-p{
+p {
     font-size: larger;
     font-weight: bold;
 }
 
 #gameboard {
+    display: grid;
+    grid-template-columns: repeat(8, 60px);
+    grid-template-rows: repeat(8, 60px);
     width: 480px;
     height: 480px;
-    display: flex;
-    flex-wrap: wrap;
+    border: 2px solid #333;
 }
 
 .square {
@@ -52,19 +54,13 @@ p{
     width: 40px;
     height: 40px;
     position: relative;
-    z-index: -9;
-    pointer-events: none;
-}
-
-path {
-    position: relative;
-    z-index: -10;
-    pointer-events: none;
+    z-index: 1;
 }
 
 .piece {
     position: relative;
-    z-index: 10;
+    z-index: 2;
+    pointer-events: none;
 }
 
 .black {
@@ -72,5 +68,5 @@ path {
 }
 
 .white {
-    fill: rgb(255, 255, 255)
+    fill: rgb(255, 255, 255);
 }

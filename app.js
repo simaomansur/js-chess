@@ -3,22 +3,22 @@ const gameBoard = document.querySelector("#gameboard");
 const playerDetails = document.querySelector("#player");
 const infoDisplay = document.querySelector("#info-display");
 const err = document.querySelector("#err");
-const width = 8
 
 let playerTurn = 'white';
 playerDetails.textContent = playerTurn;
 
 const startPieces = [
-    rook, knight, bishop, queen, king, bishop, knight, rook,
-    pawn, pawn, pawn, pawn, pawn, pawn, pawn, pawn,
+    'rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook',
+    'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn',
     '', '', '', '', '', '', '', '',
     '', '', '', '', '', '', '', '',
     '', '', '', '', '', '', '', '',
     '', '', '', '', '', '', '', '',
-    pawn, pawn, pawn, pawn, pawn, pawn, pawn, pawn,
-    rook, knight, bishop, queen, king, bishop, knight, rook
-]
+    'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn',
+    'rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook'
+];
 
+/*
 function createBoard() {
     startPieces.forEach((startPiece, i) => {
         const square = document.createElement("div");
@@ -46,8 +46,42 @@ function createBoard() {
         gameBoard.append(square);
     });
 };
+*/
+
+function createBoard() {
+    const rows = 8;
+    const cols = 8;
+    const columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            const square = document.createElement("div");
+            square.classList.add("square");
+            square.setAttribute("square-id", `${columns[j]}${rows - i}`);
+            square.setAttribute("row-id", i);
+            square.setAttribute("col-id", j);
+
+            const isEvenSquare = (i + j) % 2 === 0;
+            square.classList.add(isEvenSquare ? "beige" : "brown");
+
+            // Calculate the correct piece index
+            const pieceIndex = i * cols + j;
+            const piece = startPieces[pieceIndex];
+            if (piece) {
+                const pieceElement = document.createElement("div");
+                pieceElement.classList.add("piece");
+                pieceElement.innerHTML = piece;
+                pieceElement.setAttribute("draggable", true);
+                pieceElement.classList.add(pieceIndex < 16 || pieceIndex >= 48 ? 'black' : 'white');
+                square.appendChild(pieceElement);
+            }
+            gameBoard.appendChild(square);
+        }
+    }
+}
 
 createBoard();
+/*
 reverseIds();
 
 const allSquares = document.querySelectorAll("#gameboard .square");
@@ -403,3 +437,4 @@ function checkForWin() {
         gameOver = true;
     }
 }
+    */
