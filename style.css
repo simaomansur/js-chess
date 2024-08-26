@@ -60,7 +60,6 @@ p {
 .piece {
     position: relative;
     z-index: 2;
-    pointer-events: none;
 }
 
 .black {
