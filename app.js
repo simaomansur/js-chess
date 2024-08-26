@@ -78,6 +78,9 @@ function createBoard() {
     }
 }
 
+// Initialize the game
+createBoard();
+
 function dragStart(e) {
     draggedPiece = e.target;
     console.log(draggedPiece.id, draggedPiece.parentElement.getAttribute('square-id'),);
@@ -99,25 +102,30 @@ function dragOver(e) {
 
 function dragDrop(e) {
     e.preventDefault();
+
     if (draggedPiece && e.target.classList.contains('square')) {
         const targetSquare = e.target;
-        const piece = draggedPiece.id;
-        const startId = draggedPiece.parentNode.getAttribute('square-id');
-        const targetId = targetSquare.getAttribute('square-id');
 
-        if (isCorrectTurn(draggedPiece) && isMoveValid(piece, startId, targetId)) {
+        // Check if the move is valid for the current piece and turn
+        if (isCorrectTurn(draggedPiece)) {
             const opponentPiece = targetSquare.querySelector('.piece');
+
+            // If there's an opponent piece, capture it
             if (opponentPiece && !opponentPiece.classList.contains(playerTurn)) {
-                targetSquare.removeChild(opponentPiece); // Capture the opponent's piece
+                targetSquare.removeChild(opponentPiece);
             }
 
+            // Move the piece to the new square
             targetSquare.appendChild(draggedPiece);
+
+            // Change the player after a successful move
             changePlayer();
         } else {
-            console.error('Invalid move');
+            console.error('Invalid move or not your turn');
         }
     }
 }
+
 
 
 function changePlayer() {
@@ -164,6 +172,3 @@ function isValidPawnMove(startId, targetId) {
 
     return false;
 }
-
-// Initialize the game
-createBoard();
